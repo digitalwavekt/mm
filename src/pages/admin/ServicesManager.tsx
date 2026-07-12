@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { trpc } from "@/providers/trpc";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import { toast } from "sonner";
 
 const emptyForm = {
@@ -82,8 +83,8 @@ export default function ServicesManager() {
               <textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm resize-none" />
             </div>
             <div>
-              <label className="text-white/60 text-sm mb-1 block">Image URL</label>
-              <input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="/services/bridal.jpg" />
+              <label className="text-white/60 text-sm mb-1 block">Image</label>
+              <ImageUploader value={form.imageUrl} onChange={(url) => setForm({ ...form, imageUrl: url })} folder="services" placeholder="/services/bridal.jpg" />
             </div>
             <div>
               <label className="text-white/60 text-sm mb-1 block">Price</label>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { trpc } from "@/providers/trpc";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import { toast } from "sonner";
 
 const categories = ["Bridal", "Party", "Fashion", "Natural", "Creative"];
@@ -48,8 +49,8 @@ export default function GalleryManager() {
           <h3 className="text-lg font-bold text-white mb-4">{editing ? "Edit" : "New"} Gallery Item</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
-              <label className="text-white/60 text-sm mb-1 block">Image URL *</label>
-              <input required value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="/gallery/bridal-1.jpg" />
+              <label className="text-white/60 text-sm mb-1 block">Image *</label>
+              <ImageUploader value={form.imageUrl} onChange={(url) => setForm({ ...form, imageUrl: url })} folder="gallery" placeholder="/gallery/bridal-1.jpg" />
             </div>
             <div>
               <label className="text-white/60 text-sm mb-1 block">Title</label>

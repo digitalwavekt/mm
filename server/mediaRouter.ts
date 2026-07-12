@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createRouter, publicQuery, adminQuery } from "./middleware";
+import { uploadImage } from "./lib/storage";
 import {
   getAllMedia,
   getMediaByFolder,
@@ -60,6 +61,36 @@ export const mediaRouter = createRouter({
     )
     .mutation(async ({ input }) => {
       return addMediaItem(input);
+    }),
+
+  // Uploads a base64-encoded image to Supabase Storage and records it in
+  // the media library in one step. Returns the created media row (with its
+  // public fileUrl), ready to plug straight into a form field.
+  upload: adminQuery
+    .input(
+      z.object({
+        fileName: z.string().min(1),
+        mimeType: z.string().min(1),
+        dataBase64: z.string().min(1),
+        folder: z.string().min(1).default("uploads"),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const uploaded = await uploadImage({
+        dataBase64: input.dataBase64,
+        mimeType: input.mimeType,
+        folder: input.folder,
+      });
+
+      return addMediaItem({
+        fileName: input.fileName,
+        originalName: input.fileName,
+        fileUrl: uploaded.url,
+        fileType: "image",
+        mimeType: input.mimeType,
+        size: uploaded.size,
+        folder: input.folder,
+      });
     }),
 
   update: adminQuery

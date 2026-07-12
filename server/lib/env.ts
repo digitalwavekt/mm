@@ -28,4 +28,9 @@ export const env = {
   resendApiKey: process.env.RESEND_API_KEY ?? "",
   emailFrom: process.env.EMAIL_FROM ?? "onboarding@resend.dev",
   notifyEmail: process.env.NOTIFY_EMAIL ?? "",
+
+  // Supabase Storage (used for admin image uploads — media library)
+  supabaseUrl: process.env.SUPABASE_URL ?? "",
+  supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
+  supabaseStorageBucket: process.env.SUPABASE_STORAGE_BUCKET ?? "media",
 };

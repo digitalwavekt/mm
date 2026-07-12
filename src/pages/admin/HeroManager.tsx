@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, Pencil, Trash2, Image, Video } from "lucide-react";
 import { trpc } from "@/providers/trpc";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import { toast } from "sonner";
 
 export default function HeroManager() {
@@ -90,7 +91,11 @@ export default function HeroManager() {
             </div>
             <div>
               <label className="text-white/60 text-sm mb-1 block">Media URL *</label>
-              <input required value={form.mediaUrl} onChange={(e) => setForm({ ...form, mediaUrl: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="/hero/hero-1.jpg" />
+              {form.type === "image" ? (
+                <ImageUploader value={form.mediaUrl} onChange={(url) => setForm({ ...form, mediaUrl: url })} folder="hero" placeholder="/hero/hero-1.jpg" />
+              ) : (
+                <input required value={form.mediaUrl} onChange={(e) => setForm({ ...form, mediaUrl: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="/hero/hero-1.mp4" />
+              )}
             </div>
             <div>
               <label className="text-white/60 text-sm mb-1 block">Title</label>

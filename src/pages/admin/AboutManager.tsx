@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Save, Plus, Trash2, Pencil } from "lucide-react";
 import { trpc } from "@/providers/trpc";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import { toast } from "sonner";
 
 export default function AboutManager() {
@@ -90,8 +91,8 @@ export default function AboutManager() {
             <input value={ownerForm.title} onChange={(e) => setOwnerForm({ ...ownerForm, title: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" />
           </div>
           <div className="sm:col-span-2">
-            <label className="text-white/60 text-sm mb-1 block">Photo URL</label>
-            <input value={ownerForm.photoUrl} onChange={(e) => setOwnerForm({ ...ownerForm, photoUrl: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm" placeholder="/about/owner.jpg" />
+            <label className="text-white/60 text-sm mb-1 block">Photo</label>
+            <ImageUploader value={ownerForm.photoUrl} onChange={(url) => setOwnerForm({ ...ownerForm, photoUrl: url })} folder="about" placeholder="/about/owner.jpg" />
           </div>
           <div className="sm:col-span-2">
             <label className="text-white/60 text-sm mb-1 block">Bio</label>
