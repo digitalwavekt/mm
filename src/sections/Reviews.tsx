@@ -1,0 +1,266 @@
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Star, Quote, Send } from "lucide-react";
+import { trpc } from "@/providers/trpc";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { toast } from "sonner";
+
+export default function Reviews() {
+  const { data: reviews } = trpc.reviews.list.useQuery();
+  const { data: avgRating } = trpc.reviews.average.useQuery();
+  const submitReview = trpc.reviews.submit.useMutation({
+    onSuccess: () => {
+      toast.success("Review submitted! It will appear after approval.");
+      setForm({ name: "", email: "", rating: 5, comment: "" });
+    },
+  });
+  const { ref, isVisible } = useScrollAnimation(0.1);
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    rating: 5,
+    comment: "",
+  });
+  const [showForm, setShowForm] = useState(false);
+
+  const reviewList = reviews?.length
+    ? reviews
+    : [
+        { id: 1, name: "Sarah Mitchell", rating: 5, comment: "Absolutely stunning work! Mamta made me feel like a princess on my wedding day. The makeup lasted all day and looked incredible in photos.", isPinned: true, createdAt: new Date(), adminReply: null },
+        { id: 2, name: "Emma Lewis", rating: 5, comment: "The attention to detail is unmatched. I've never felt more beautiful. Highly recommend for any special occasion!", isPinned: true, createdAt: new Date(), adminReply: null },
+        { id: 3, name: "Jessica Kim", rating: 5, comment: "Professional, talented, and so kind. Mamta understood exactly what I wanted and delivered beyond expectations.", isPinned: false, createdAt: new Date(), adminReply: null },
+        { id: 4, name: "Olivia Rodriguez", rating: 4, comment: "Amazing experience! The studio is gorgeous and the service is top-notch. Will definitely be coming back.", isPinned: false, createdAt: new Date(), adminReply: null },
+        { id: 5, name: "Amanda Torres", rating: 5, comment: "I've been to many makeup artists but Mamta is truly in a league of her own. The luxury experience is worth every penny.", isPinned: false, createdAt: new Date(), adminReply: null },
+        { id: 6, name: "Rachel Green", rating: 5, comment: "My bridal trial was incredible. Mamta took the time to understand my vision and created the perfect look.", isPinned: false, createdAt: new Date(), adminReply: null },
+      ];
+
+  const pinned = reviewList.filter((r) => r.isPinned);
+  const regular = reviewList.filter((r) => !r.isPinned);
+  const displayReviews = [...pinned, ...regular].slice(0, 6);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.comment.trim()) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    submitReview.mutate(form);
+  };
+
+  return (
+    <section id="reviews" className="relative py-24 lg:py-32 overflow-hidden" ref={ref}>
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d4af37]/3 to-transparent pointer-events-none" />
+
+      <div className="section-padding relative z-10">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <span className="text-sm tracking-[0.3em] uppercase text-[#b76e79] font-medium">
+            Testimonials
+          </span>
+          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white mt-3 font-['Playfair_Display']">
+            Client <span className="luxury-gradient-text">Reviews</span>
+          </h2>
+
+          {/* Rating Summary */}
+          <div className="mt-8 inline-flex items-center gap-4 glass-card rounded-2xl px-8 py-4">
+            <div className="text-center">
+              <div className="text-4xl font-bold luxury-gradient-text">
+                {avgRating?.average ?? "5.0"}
+              </div>
+              <div className="flex items-center gap-0.5 mt-1 justify-center">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star
+                    key={s}
+                    className={`w-4 h-4 ${
+                      s <= Math.round(Number(avgRating?.average ?? 5))
+                        ? "text-[#d4af37] fill-[#d4af37]"
+                        : "text-white/20"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="w-px h-12 bg-white/10" />
+            <div className="text-left">
+              <div className="text-2xl font-bold text-white">
+                {avgRating?.count ?? reviewList.length}
+              </div>
+              <div className="text-white/50 text-sm">Happy Clients</div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Reviews Grid */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isVisible ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
+        >
+          {displayReviews.map((review, i) => (
+            <motion.div
+              key={review.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isVisible ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.1 * i }}
+              className={`glass-card rounded-2xl p-6 relative ${
+                review.isPinned ? "ring-1 ring-[#d4af37]/30" : ""
+              }`}
+            >
+              {review.isPinned && (
+                <div className="absolute -top-3 left-6">
+                  <span className="px-3 py-1 rounded-full text-xs font-medium luxury-gradient text-white">
+                    Featured
+                  </span>
+                </div>
+              )}
+
+              <Quote className="w-8 h-8 text-[#b76e79]/20 mb-4" />
+
+              <div className="flex items-center gap-1 mb-3">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star
+                    key={s}
+                    className={`w-4 h-4 ${
+                      s <= review.rating
+                        ? "text-[#d4af37] fill-[#d4af37]"
+                        : "text-white/20"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <p className="text-white/70 text-sm leading-relaxed mb-4">
+                {review.comment}
+              </p>
+
+              <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+                <div className="w-10 h-10 rounded-full luxury-gradient flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">
+                    {review.name.charAt(0)}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-white font-medium text-sm block">
+                    {review.name}
+                  </span>
+                  <span className="text-white/40 text-xs">
+                    {review.createdAt
+                      ? new Date(review.createdAt).toLocaleDateString()
+                      : "Recent"}
+                  </span>
+                </div>
+              </div>
+
+              {review.adminReply && (
+                <div className="mt-4 p-3 rounded-lg bg-[#b76e79]/10 border border-[#b76e79]/20">
+                  <span className="text-xs text-[#b76e79] font-medium">Reply from Mamta</span>
+                  <p className="text-white/60 text-xs mt-1">{review.adminReply}</p>
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Submit Review Button */}
+        <div className="text-center">
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="btn-luxury-outline rounded-full"
+          >
+            {showForm ? "Close Form" : "Write a Review"}
+          </button>
+        </div>
+
+        {/* Review Form */}
+        {showForm && (
+          <motion.form
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            onSubmit={handleSubmit}
+            className="max-w-lg mx-auto mt-8 glass-card rounded-2xl p-8"
+          >
+            <h3 className="text-xl font-bold text-white mb-6 font-['Playfair_Display']">
+              Share Your Experience
+            </h3>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-white/70 text-sm mb-2 block">Your Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-[#b76e79] transition-colors"
+                  placeholder="Enter your name"
+                />
+              </div>
+
+              <div>
+                <label className="text-white/70 text-sm mb-2 block">Email</label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-[#b76e79] transition-colors"
+                  placeholder="Enter your email"
+                />
+              </div>
+
+              <div>
+                <label className="text-white/70 text-sm mb-2 block">Rating</label>
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setForm({ ...form, rating: s })}
+                      className="transition-transform hover:scale-110"
+                    >
+                      <Star
+                        className={`w-8 h-8 ${
+                          s <= form.rating
+                            ? "text-[#d4af37] fill-[#d4af37]"
+                            : "text-white/20"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-white/70 text-sm mb-2 block">Your Review *</label>
+                <textarea
+                  required
+                  rows={4}
+                  value={form.comment}
+                  onChange={(e) => setForm({ ...form, comment: e.target.value })}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-[#b76e79] transition-colors resize-none"
+                  placeholder="Share your experience..."
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitReview.isPending}
+                className="w-full btn-luxury rounded-full py-3 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <Send className="w-4 h-4" />
+                {submitReview.isPending ? "Submitting..." : "Submit Review"}
+              </button>
+            </div>
+          </motion.form>
+        )}
+      </div>
+    </section>
+  );
+}
