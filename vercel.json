@@ -1,21 +1,7 @@
 {
-  "functions": {
-    "api/[...path].ts": {
-      "includeFiles": [
-        "server/**",
-        "db/**",
-        "contracts/**"
-      ]
-    }
-  },
+  "buildCommand": "npm run vercel-build",
+  "outputDirectory": "dist/public",
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
-    {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

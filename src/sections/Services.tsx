@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Clock, DollarSign, Check, Sparkles } from "lucide-react";
 import { trpc } from "@/providers/trpc";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import {
   Dialog,
@@ -10,6 +11,8 @@ import {
 
 export default function Services() {
   const { data: services } = trpc.services.list.useQuery();
+  const { getSetting } = useSiteSettings();
+  const whatsapp = getSetting("whatsapp", "+15552345678");
   const [selectedService, setSelectedService] = useState<(typeof servicesList)[0] | null>(null);
   const { ref, isVisible } = useScrollAnimation(0.1);
 
@@ -270,7 +273,7 @@ export default function Services() {
                     Book This Service
                   </button>
                   <a
-                    href={`https://wa.me/`}
+                    href={`https://wa.me/${whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(`Hi! I'm interested in booking ${selectedService.name}.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-6 py-3 rounded-full border border-[#25d366] text-[#25d366] hover:bg-[#25d366] hover:text-white transition-all text-sm font-medium"

@@ -33,4 +33,9 @@ export const env = {
   supabaseUrl: process.env.SUPABASE_URL ?? "",
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
   supabaseStorageBucket: process.env.SUPABASE_STORAGE_BUCKET ?? "media",
+
+  // Google Places API — powers the "Google Reviews" section (pulls your
+  // business's live rating + latest reviews from Google).
+  googlePlacesApiKey: process.env.GOOGLE_PLACES_API_KEY ?? "",
+  googlePlaceId: process.env.GOOGLE_PLACE_ID ?? "",
 };

@@ -11,6 +11,7 @@ import { adsRouter } from "./adsRouter";
 import { seoRouter } from "./seoRouter";
 import { mediaRouter } from "./mediaRouter";
 import { dashboardRouter } from "./dashboardRouter";
+import { googleReviewsRouter } from "./googleReviewsRouter";
 
 export const appRouter = createRouter({
   ping: publicQuery.query(() => ({ ok: true, ts: Date.now() })),
@@ -27,6 +28,7 @@ export const appRouter = createRouter({
   ads: adsRouter,
   seo: seoRouter,
   media: mediaRouter,
+  googleReviews: googleReviewsRouter,
 
   // Admin Dashboard
   dashboard: dashboardRouter,
