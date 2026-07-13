@@ -24,3 +24,15 @@ services:
         sync: false
       - key: NOTIFY_EMAIL
         sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_STORAGE_BUCKET
+        value: media
+      - key: GOOGLE_PLACES_API_KEY
+        sync: false
+      - key: GOOGLE_PLACE_ID
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false

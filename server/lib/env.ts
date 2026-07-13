@@ -38,4 +38,10 @@ export const env = {
   // business's live rating + latest reviews from Google).
   googlePlacesApiKey: process.env.GOOGLE_PLACES_API_KEY ?? "",
   googlePlaceId: process.env.GOOGLE_PLACE_ID ?? "",
+
+  // Comma-separated list of origins allowed to call this API cross-origin
+  // (e.g. your Vercel frontend URL). Only needed when frontend and backend
+  // are deployed to different domains — same-origin deployments (e.g. the
+  // Docker/single-service setup) don't need this at all.
+  corsOrigin: process.env.CORS_ORIGIN ?? "",
 };
