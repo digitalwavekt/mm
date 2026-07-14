@@ -7,32 +7,9 @@ export default function Offers() {
   const { data: offers } = trpc.ads.offers.useQuery();
   const { ref, isVisible } = useScrollAnimation(0.1);
 
-  const activeOffers = offers?.length
-    ? offers
-    : [
-        {
-          id: 1,
-          title: "Bridal Package Special",
-          description: "Book your bridal makeup and get a FREE trial session + touch-up kit worth $150!",
-          imageUrl: "/offers/bridal-offer.jpg",
-          discountPercent: 20,
-          couponCode: "BRIDE20",
-          validUntil: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-          ctaText: "Claim Offer",
-          ctaLink: "#contact",
-        },
-        {
-          id: 2,
-          title: "Party Season Deal",
-          description: "Book party glam for you and 3 friends, get 15% off the total!",
-          imageUrl: "/offers/party-offer.jpg",
-          discountPercent: 15,
-          couponCode: "PARTY15",
-          validUntil: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
-          ctaText: "Book Now",
-          ctaLink: "#contact",
-        },
-      ];
+  const activeOffers = offers ?? [];
+
+  if (activeOffers.length === 0) return null;
 
   return (
     <section className="relative py-24 lg:py-32 overflow-hidden" ref={ref}>
@@ -67,7 +44,7 @@ export default function Offers() {
               {/* Image */}
               <div className="relative aspect-video overflow-hidden">
                 <img
-                  src={offer.imageUrl ?? "/offers/bridal-offer.jpg"}
+                  src={offer.imageUrl ?? ""}
                   alt={offer.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />

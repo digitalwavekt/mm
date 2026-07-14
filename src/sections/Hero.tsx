@@ -12,42 +12,25 @@ export default function Hero() {
 
   const phone = getSetting("phone", "+1 (555) 234-5678");
   const whatsapp = getSetting("whatsapp", "+15552345678");
+  const siteName = getSetting("siteName", "Mamta Makeover");
+  const tagline = getSetting("tagline", "Where Beauty Meets Artistry");
 
+  // No fake stock-photo slides here — if the admin hasn't added any Hero
+  // slides yet, fall back to a single plain slide built from real Settings
+  // (site name/tagline) with no background image, rather than pretend
+  // placeholder photography.
   const activeSlides = slides?.length
     ? slides
     : [
         {
-          id: 1,
-          mediaUrl: "/hero/hero-1.jpg",
-          title: "Mamta Makeover",
-          subtitle:
-            "Where Beauty Meets Artistry. Premium Makeup Services for Every Occasion.",
+          id: 0,
+          mediaUrl: "",
+          title: siteName,
+          subtitle: tagline,
           buttonText: "Book Appointment",
           buttonLink: "#contact",
           secondaryButtonText: "Explore Services",
           secondaryButtonLink: "#services",
-          overlayOpacity: 60,
-        },
-        {
-          id: 2,
-          mediaUrl: "/hero/hero-2.jpg",
-          title: "Bridal Glamour",
-          subtitle:
-            "Transform into the most beautiful version of yourself on your special day.",
-          buttonText: "Book Bridal",
-          buttonLink: "#contact",
-          secondaryButtonText: "View Gallery",
-          secondaryButtonLink: "#gallery",
-          overlayOpacity: 60,
-        },
-        {
-          id: 3,
-          mediaUrl: "/hero/hero-3.jpg",
-          title: "Runway Ready",
-          subtitle:
-            "Fashion-forward looks for editorial, runway, and special events.",
-          buttonText: "Get The Look",
-          buttonLink: "#contact",
           overlayOpacity: 60,
         },
       ];
@@ -108,7 +91,14 @@ export default function Hero() {
         >
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${slide.mediaUrl})` }}
+            style={
+              slide.mediaUrl
+                ? { backgroundImage: `url(${slide.mediaUrl})` }
+                : {
+                    background:
+                      "radial-gradient(circle at 30% 20%, rgba(183,110,121,0.35), transparent 60%), radial-gradient(circle at 70% 80%, rgba(212,175,55,0.25), transparent 60%), #0a0a0a",
+                  }
+            }
           />
           <div
             className="absolute inset-0 bg-black"
@@ -193,6 +183,7 @@ export default function Hero() {
       </div>
 
       {/* Slide Indicators */}
+      {activeSlides.length > 1 && (
       <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
         {activeSlides.map((_, i) => (
           <button
@@ -209,6 +200,7 @@ export default function Hero() {
           />
         ))}
       </div>
+      )}
 
       {/* Scroll Indicator */}
       <motion.div

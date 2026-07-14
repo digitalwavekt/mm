@@ -40,16 +40,7 @@ export default function Reviews() {
     isGoogle: true as const,
   }));
 
-  const fallbackReviewList = reviews?.length
-    ? reviews
-    : [
-        { id: 1, name: "Sarah Mitchell", rating: 5, comment: "Absolutely stunning work! Mamta made me feel like a princess on my wedding day. The makeup lasted all day and looked incredible in photos.", isPinned: true, createdAt: new Date(), adminReply: null },
-        { id: 2, name: "Emma Lewis", rating: 5, comment: "The attention to detail is unmatched. I've never felt more beautiful. Highly recommend for any special occasion!", isPinned: true, createdAt: new Date(), adminReply: null },
-        { id: 3, name: "Jessica Kim", rating: 5, comment: "Professional, talented, and so kind. Mamta understood exactly what I wanted and delivered beyond expectations.", isPinned: false, createdAt: new Date(), adminReply: null },
-        { id: 4, name: "Olivia Rodriguez", rating: 4, comment: "Amazing experience! The studio is gorgeous and the service is top-notch. Will definitely be coming back.", isPinned: false, createdAt: new Date(), adminReply: null },
-        { id: 5, name: "Amanda Torres", rating: 5, comment: "I've been to many makeup artists but Mamta is truly in a league of her own. The luxury experience is worth every penny.", isPinned: false, createdAt: new Date(), adminReply: null },
-        { id: 6, name: "Rachel Green", rating: 5, comment: "My bridal trial was incredible. Mamta took the time to understand my vision and created the perfect look.", isPinned: false, createdAt: new Date(), adminReply: null },
-      ];
+  const fallbackReviewList = reviews ?? [];
 
   const reviewList = usingGoogle ? googleReviewList : fallbackReviewList;
 
@@ -98,6 +89,7 @@ export default function Reviews() {
           )}
 
           {/* Rating Summary */}
+          {(usingGoogle || (avgRating?.count ?? 0) > 0) && (
           <div className="mt-8 inline-flex items-center gap-4 glass-card rounded-2xl px-8 py-4">
             <div className="text-center">
               <div className="text-4xl font-bold luxury-gradient-text">
@@ -128,6 +120,7 @@ export default function Reviews() {
               <div className="text-white/50 text-sm">Happy Clients</div>
             </div>
           </div>
+          )}
 
           {usingGoogle && googleReviews?.googleMapsUri && (
             <div className="mt-4">
@@ -145,6 +138,11 @@ export default function Reviews() {
         </motion.div>
 
         {/* Reviews Grid */}
+        {displayReviews.length === 0 ? (
+          <div className="text-center py-16 text-white/40 mb-4">
+            No reviews yet — be the first to share your experience.
+          </div>
+        ) : (
         <motion.div
           initial={{ opacity: 0 }}
           animate={isVisible ? { opacity: 1 } : {}}
@@ -225,6 +223,7 @@ export default function Reviews() {
             </motion.div>
           ))}
         </motion.div>
+        )}
 
         {/* Submit Review Button */}
         <div className="text-center">

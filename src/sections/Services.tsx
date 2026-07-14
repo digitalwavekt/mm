@@ -16,84 +16,7 @@ export default function Services() {
   const [selectedService, setSelectedService] = useState<(typeof servicesList)[0] | null>(null);
   const { ref, isVisible } = useScrollAnimation(0.1);
 
-  const servicesList = services?.length
-    ? services
-    : [
-        {
-          id: 1,
-          name: "Bridal Makeup",
-          slug: "bridal-makeup",
-          shortDescription: "Flawless, long-lasting bridal glamour for your special day",
-          description: "Our signature bridal makeup service is designed to make you look and feel absolutely radiant on your wedding day. Using premium, long-lasting products, we create a customized look that photographs beautifully.",
-          imageUrl: "/services/bridal.jpg",
-          price: "350.00",
-          duration: "2-3 hours",
-          category: "Bridal",
-          benefits: ["HD Photoshoot-Ready Finish", "Waterproof & Long-Lasting", "Bridal Trial Included", "Touch-up Kit Provided"],
-          preparation: "Please arrive with clean, moisturized face.",
-          afterCare: "Use gentle cleanser. Avoid touching face.",
-        },
-        {
-          id: 2,
-          name: "Party Glam",
-          slug: "party-glam",
-          shortDescription: "Stunning evening and party makeup looks",
-          description: "Turn heads at your next event with our Party Glam service. From subtle sophistication to bold and dramatic.",
-          imageUrl: "/services/party.jpg",
-          price: "150.00",
-          duration: "1 hour",
-          category: "Party",
-          benefits: ["Smudge-Proof Application", "Custom Color Matching", "Long-Wear Formula", "Lashes Included"],
-        },
-        {
-          id: 3,
-          name: "Editorial Makeup",
-          slug: "editorial-makeup",
-          shortDescription: "High-fashion looks for photoshoots and runway",
-          description: "Editorial and fashion-forward makeup for magazine shoots, runway shows, and creative projects.",
-          imageUrl: "/services/editorial.jpg",
-          price: "400.00",
-          duration: "2-3 hours",
-          category: "Fashion",
-          benefits: ["HD Camera-Ready", "Creative Direction", "Full Product Kit", "On-Set Touch-ups"],
-        },
-        {
-          id: 4,
-          name: "Natural Everyday",
-          slug: "natural-everyday",
-          shortDescription: "Effortless, natural beauty enhancement",
-          description: "Enhance your natural beauty with a fresh, dewy look perfect for everyday wear.",
-          imageUrl: "/services/natural.jpg",
-          price: "100.00",
-          duration: "45 min",
-          category: "Daily",
-          benefits: ["Skin-Like Finish", "Lightweight Formula", "Quick Application", "Natural Glow"],
-        },
-        {
-          id: 5,
-          name: "Special Effects",
-          slug: "special-effects",
-          shortDescription: "Creative SFX makeup for events and productions",
-          description: "Transformative special effects makeup for Halloween, themed events, film, and theater.",
-          imageUrl: "/services/sfx.jpg",
-          price: "300.00",
-          duration: "2-4 hours",
-          category: "Creative",
-          benefits: ["Professional Grade Products", "Custom Design", "Safe Removal", "Long-Lasting"],
-        },
-        {
-          id: 6,
-          name: "Makeup Lessons",
-          slug: "makeup-lessons",
-          shortDescription: "One-on-one makeup masterclasses",
-          description: "Learn professional techniques in personalized one-on-one sessions.",
-          imageUrl: "/services/lessons.jpg",
-          price: "200.00",
-          duration: "2 hours",
-          category: "Education",
-          benefits: ["Personalized Curriculum", "Take-Home Notes", "Product Recommendations", "Hands-On Practice"],
-        },
-      ];
+  const servicesList = services ?? [];
 
   return (
     <section id="services" className="relative py-24 lg:py-32 overflow-hidden" ref={ref}>
@@ -120,6 +43,11 @@ export default function Services() {
         </motion.div>
 
         {/* Services Grid */}
+        {servicesList.length === 0 ? (
+          <div className="text-center py-16 text-white/40">
+            Services coming soon.
+          </div>
+        ) : (
         <motion.div
           initial={{ opacity: 0 }}
           animate={isVisible ? { opacity: 1 } : {}}
@@ -138,7 +66,7 @@ export default function Services() {
               {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img
-                  src={service.imageUrl ?? "/services/bridal.jpg"}
+                  src={service.imageUrl ?? ""}
                   alt={service.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -181,6 +109,7 @@ export default function Services() {
             </motion.div>
           ))}
         </motion.div>
+        )}
       </div>
 
       {/* Service Detail Dialog */}

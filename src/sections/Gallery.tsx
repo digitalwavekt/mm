@@ -12,18 +12,7 @@ export default function Gallery() {
   const [lightbox, setLightbox] = useState<number | null>(null);
   const { ref, isVisible } = useScrollAnimation(0.1);
 
-  const items = galleryItems?.length
-    ? galleryItems
-    : [
-        { id: 1, imageUrl: "/gallery/bridal-1.jpg", category: "Bridal", title: "Elegant Bridal", clientName: "Sarah M." },
-        { id: 2, imageUrl: "/gallery/bridal-2.jpg", category: "Bridal", title: "Royal Bridal", clientName: "Emma L." },
-        { id: 3, imageUrl: "/gallery/party-1.jpg", category: "Party", title: "Glam Night", clientName: "Jessica K." },
-        { id: 4, imageUrl: "/gallery/party-2.jpg", category: "Party", title: "Evening Elegance", clientName: "Olivia R." },
-        { id: 5, imageUrl: "/gallery/fashion-1.jpg", category: "Fashion", title: "Runway Gold" },
-        { id: 6, imageUrl: "/gallery/fashion-2.jpg", category: "Fashion", title: "Editorial Red" },
-        { id: 7, imageUrl: "/gallery/natural-1.jpg", category: "Natural", title: "Fresh Glow", clientName: "Amanda T." },
-        { id: 8, imageUrl: "/gallery/sfx-1.jpg", category: "Creative", title: "Fantasy Look" },
-      ];
+  const items = galleryItems ?? [];
 
   const filtered =
     activeCategory === "All"
@@ -77,6 +66,11 @@ export default function Gallery() {
         </motion.div>
 
         {/* Masonry Grid */}
+        {items.length === 0 ? (
+          <div className="text-center py-16 text-white/40">
+            Gallery coming soon.
+          </div>
+        ) : (
         <motion.div layout className="masonry-grid">
           <AnimatePresence mode="popLayout">
             {filtered.map((item, i) => (
@@ -121,6 +115,7 @@ export default function Gallery() {
             ))}
           </AnimatePresence>
         </motion.div>
+        )}
       </div>
 
       {/* Lightbox */}

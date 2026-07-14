@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Award, Star, Clock, Users, Heart, Plane, Home, TrendingUp } from "lucide-react";
 import { trpc } from "@/providers/trpc";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -34,36 +35,17 @@ const itemVariants = {
 export default function About() {
   const { data: owner } = trpc.about.owner.useQuery();
   const { data: timeline } = trpc.about.timeline.useQuery();
+  const { getSetting } = useSiteSettings();
+  const siteName = getSetting("siteName", "");
   const { ref, isVisible } = useScrollAnimation(0.1);
 
-  const achievements = (owner?.achievements as string[]) ?? [
-    "500+ Bridal Makeovers",
-    "Featured in Vogue Magazine",
-    "Celebrity Makeup Artist",
-    "International Beauty Awards Winner",
-  ];
+  const achievements = (owner?.achievements as string[]) ?? [];
 
-  const certificates = (owner?.certificates as string[]) ?? [
-    "MAC Pro Certification",
-    "Bobbi Brown Master Class",
-    "Charlotte Tilbury Academy",
-    "HD Makeup Specialist",
-  ];
+  const certificates = (owner?.certificates as string[]) ?? [];
 
-  const awards = (owner?.awards as string[]) ?? [
-    "Best Bridal Makeup Artist 2025",
-    "Luxury Beauty Excellence Award",
-    "Top 10 Makeup Artists - Hollywood",
-  ];
+  const awards = (owner?.awards as string[]) ?? [];
 
-  const activeTimeline = timeline?.filter((t) => t.isActive) ?? [
-    { id: 1, year: "2014", title: "Started Career", description: "Began journey at MAC Cosmetics flagship store", icon: "star" },
-    { id: 2, year: "2016", title: "First Bridal Client", description: "Discovered true passion for bridal makeup", icon: "heart" },
-    { id: 3, year: "2018", title: "Paris Training", description: "Trained under legendary artists in Paris and Milan", icon: "plane" },
-    { id: 4, year: "2020", title: "Studio Launch", description: "Opened the first Mamta Makeover studio", icon: "home" },
-    { id: 5, year: "2023", title: "Vogue Feature", description: "Featured in Vogue's Top Makeup Artists", icon: "award" },
-    { id: 6, year: "2025", title: "1000th Client", description: "Celebrated 1000+ happy clients", icon: "users" },
-  ];
+  const activeTimeline = timeline?.filter((t) => t.isActive) ?? [];
 
   return (
     <section id="about" className="relative py-24 lg:py-32 overflow-hidden" ref={ref}>
@@ -99,62 +81,74 @@ export default function About() {
             <div className="relative aspect-[3/4] max-w-md mx-auto lg:mx-0">
               <div className="absolute inset-0 rounded-2xl luxury-gradient opacity-20 blur-2xl" />
               <div className="relative h-full rounded-2xl overflow-hidden border border-white/10">
-                <img
-                  src={owner?.photoUrl ?? "/about/owner.jpg"}
-                  alt={owner?.name ?? "Mamta"}
-                  className="w-full h-full object-cover"
-                />
+                {owner?.photoUrl ? (
+                  <img
+                    src={owner.photoUrl}
+                    alt={owner?.name ?? siteName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-white/5" />
+                )}
               </div>
               {/* Experience Badge */}
+              {owner?.experience && (
               <div className="absolute -bottom-4 -right-4 glass-effect rounded-xl px-6 py-4 text-center">
                 <span className="text-3xl font-bold luxury-gradient-text block">
-                  {owner?.experience ?? "12+"}
+                  {owner.experience}
                 </span>
                 <span className="text-xs text-white/60 uppercase tracking-wider">
                   Years Experience
                 </span>
               </div>
+              )}
             </div>
           </motion.div>
 
           {/* Info */}
           <motion.div variants={itemVariants} className="space-y-6">
             <h3 className="text-2xl lg:text-3xl font-bold text-white font-['Playfair_Display']">
-              {owner?.name ?? "Mamta"}
+              {owner?.name ?? siteName}
             </h3>
             <p className="text-[#b76e79] font-medium">
               {owner?.title ?? "Founder & Lead Makeup Artist"}
             </p>
+            {owner?.bio && (
             <p className="text-white/70 leading-relaxed">
-              {owner?.bio ??
-                "With over 12 years of experience in luxury beauty and makeup artistry, I have dedicated my career to helping clients discover their most confident selves."}
+              {owner.bio}
             </p>
+            )}
 
             {/* Mission & Vision */}
+            {(owner?.mission || owner?.vision) && (
             <div className="grid sm:grid-cols-2 gap-4 pt-4">
+              {owner?.mission && (
               <div className="glass-card rounded-xl p-5">
                 <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
                   <Heart className="w-4 h-4 text-[#b76e79]" />
                   Mission
                 </h4>
                 <p className="text-white/60 text-sm">
-                  {owner?.mission ??
-                    "To empower every individual through the transformative art of makeup."}
+                  {owner.mission}
                 </p>
               </div>
+              )}
+              {owner?.vision && (
               <div className="glass-card rounded-xl p-5">
                 <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-[#d4af37]" />
                   Vision
                 </h4>
                 <p className="text-white/60 text-sm">
-                  {owner?.vision ??
-                    "To be the most sought-after luxury makeup studio, known for timeless beauty."}
+                  {owner.vision}
                 </p>
               </div>
+              )}
             </div>
+            )}
 
             {/* Achievements */}
+            {achievements.length > 0 && (
             <div className="pt-4">
               <h4 className="text-white font-semibold mb-3">Key Achievements</h4>
               <div className="grid grid-cols-2 gap-3">
@@ -169,16 +163,19 @@ export default function About() {
                 ))}
               </div>
             </div>
+            )}
           </motion.div>
         </motion.div>
 
         {/* Certificates & Awards */}
+        {(certificates.length > 0 || awards.length > 0) && (
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
           className="grid md:grid-cols-2 gap-8 mb-24"
         >
+          {certificates.length > 0 && (
           <motion.div variants={itemVariants} className="glass-card rounded-2xl p-8">
             <h3 className="text-xl font-bold text-white mb-6 font-['Playfair_Display'] flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg luxury-gradient flex items-center justify-center">
@@ -198,7 +195,9 @@ export default function About() {
               ))}
             </div>
           </motion.div>
+          )}
 
+          {awards.length > 0 && (
           <motion.div variants={itemVariants} className="glass-card rounded-2xl p-8">
             <h3 className="text-xl font-bold text-white mb-6 font-['Playfair_Display'] flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg luxury-gradient flex items-center justify-center">
@@ -218,9 +217,12 @@ export default function About() {
               ))}
             </div>
           </motion.div>
+          )}
         </motion.div>
+        )}
 
         {/* Timeline */}
+        {activeTimeline.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
@@ -278,6 +280,7 @@ export default function About() {
             </div>
           </div>
         </motion.div>
+        )}
       </div>
     </section>
   );
