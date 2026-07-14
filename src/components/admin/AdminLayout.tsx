@@ -19,6 +19,7 @@ import {
   Users,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import Logo from "@/components/Logo";
 
 const menuItems = [
@@ -43,6 +44,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { getSetting } = useSiteSettings();
+  const logoUrl = getSetting("logo", "");
   const { user, isLoading, isAuthenticated, logout } = useAuth({
     redirectOnUnauthenticated: true,
   });
@@ -75,7 +78,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               animate={{ opacity: 1 }}
               className="flex items-center gap-3"
             >
-              <Logo size="sm" />
+              <Logo size="sm" imageUrl={logoUrl} />
               <span className="font-semibold luxury-gradient-text text-sm">Admin</span>
             </motion.div>
           )}
@@ -162,7 +165,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           >
             <div className="h-16 flex items-center justify-between px-4 border-b border-white/5">
               <div className="flex items-center gap-3">
-                <Logo size="sm" />
+                <Logo size="sm" imageUrl={logoUrl} />
                 <span className="font-semibold luxury-gradient-text">Admin Panel</span>
               </div>
               <button onClick={() => setMobileOpen(false)} className="p-2">

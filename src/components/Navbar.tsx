@@ -18,6 +18,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const { getSetting } = useSiteSettings();
+  const logoUrl = getSetting("logo", "");
 
   const phone = getSetting("phone", "+1 (555) 234-5678");
   const siteName = getSetting("siteName", "Mamta Makeover");
@@ -71,7 +72,7 @@ export default function Navbar() {
               onClick={() => scrollTo("#home")}
               className="flex items-center gap-3 group"
             >
-              <Logo size="md" />
+              <Logo size="md" imageUrl={logoUrl} />
               <div className="hidden sm:block">
                 <span className="text-lg font-semibold luxury-gradient-text tracking-wide">
                   {siteName}

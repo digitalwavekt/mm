@@ -7,10 +7,10 @@ import { toast } from "sonner";
 export default function ReviewsManager() {
   const utils = trpc.useUtils();
   const { data: reviews, isLoading } = trpc.reviews.adminList.useQuery();
-  const updateStatus = trpc.reviews.updateStatus.useMutation({ onSuccess: () => { utils.reviews.adminList.invalidate(); toast.success("Status updated"); } });
-  const pinReview = trpc.reviews.pin.useMutation({ onSuccess: () => { utils.reviews.adminList.invalidate(); toast.success("Pin updated"); } });
-  const replyReview = trpc.reviews.reply.useMutation({ onSuccess: () => { utils.reviews.adminList.invalidate(); setReplying(null); toast.success("Reply sent"); } });
-  const deleteReview = trpc.reviews.delete.useMutation({ onSuccess: () => { utils.reviews.adminList.invalidate(); toast.success("Review deleted"); } });
+  const updateStatus = trpc.reviews.updateStatus.useMutation({ onSuccess: () => { utils.reviews.adminList.invalidate(); utils.reviews.list.invalidate(); utils.reviews.average.invalidate(); toast.success("Status updated"); } });
+  const pinReview = trpc.reviews.pin.useMutation({ onSuccess: () => { utils.reviews.adminList.invalidate(); utils.reviews.list.invalidate(); toast.success("Pin updated"); } });
+  const replyReview = trpc.reviews.reply.useMutation({ onSuccess: () => { utils.reviews.adminList.invalidate(); utils.reviews.list.invalidate(); setReplying(null); toast.success("Reply sent"); } });
+  const deleteReview = trpc.reviews.delete.useMutation({ onSuccess: () => { utils.reviews.adminList.invalidate(); utils.reviews.list.invalidate(); utils.reviews.average.invalidate(); toast.success("Review deleted"); } });
 
   const [replying, setReplying] = useState<number | null>(null);
   const [replyText, setReplyText] = useState("");

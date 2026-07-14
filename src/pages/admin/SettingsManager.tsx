@@ -27,7 +27,11 @@ export default function SettingsManager() {
   const utils = trpc.useUtils();
   const { data: settings, isLoading } = trpc.settings.adminList.useQuery();
   const upsertMany = trpc.settings.upsertMany.useMutation({
-    onSuccess: () => { utils.settings.adminList.invalidate(); toast.success("Settings saved"); },
+    onSuccess: () => {
+      utils.settings.adminList.invalidate();
+      utils.settings.list.invalidate();
+      toast.success("Settings saved");
+    },
   });
 
   const [form, setForm] = useState<Record<string, string>>({});

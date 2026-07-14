@@ -9,13 +9,13 @@ export default function HeroManager() {
   const utils = trpc.useUtils();
   const { data: slides, isLoading } = trpc.hero.adminList.useQuery();
   const createSlide = trpc.hero.create.useMutation({
-    onSuccess: () => { utils.hero.adminList.invalidate(); toast.success("Slide created"); setFormOpen(false); },
+    onSuccess: () => { utils.hero.adminList.invalidate(); utils.hero.list.invalidate(); toast.success("Slide created"); setFormOpen(false); },
   });
   const updateSlide = trpc.hero.update.useMutation({
-    onSuccess: () => { utils.hero.adminList.invalidate(); toast.success("Slide updated"); setEditing(null); },
+    onSuccess: () => { utils.hero.adminList.invalidate(); utils.hero.list.invalidate(); toast.success("Slide updated"); setEditing(null); },
   });
   const deleteSlide = trpc.hero.delete.useMutation({
-    onSuccess: () => { utils.hero.adminList.invalidate(); toast.success("Slide deleted"); },
+    onSuccess: () => { utils.hero.adminList.invalidate(); utils.hero.list.invalidate(); toast.success("Slide deleted"); },
   });
 
   const [formOpen, setFormOpen] = useState(false);

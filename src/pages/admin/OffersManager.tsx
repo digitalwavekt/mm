@@ -10,9 +10,9 @@ const emptyForm = { title: "", description: "", imageUrl: "", discountPercent: "
 export default function OffersManager() {
   const utils = trpc.useUtils();
   const { data: offers, isLoading } = trpc.ads.adminOffersList.useQuery();
-  const createOffer = trpc.ads.createOffer.useMutation({ onSuccess: () => { utils.ads.adminOffersList.invalidate(); toast.success("Offer created"); setFormOpen(false); } });
-  const updateOffer = trpc.ads.updateOffer.useMutation({ onSuccess: () => { utils.ads.adminOffersList.invalidate(); toast.success("Offer updated"); setEditing(null); setFormOpen(false); } });
-  const deleteOffer = trpc.ads.deleteOffer.useMutation({ onSuccess: () => { utils.ads.adminOffersList.invalidate(); toast.success("Offer deleted"); } });
+  const createOffer = trpc.ads.createOffer.useMutation({ onSuccess: () => { utils.ads.adminOffersList.invalidate(); utils.ads.offers.invalidate(); toast.success("Offer created"); setFormOpen(false); } });
+  const updateOffer = trpc.ads.updateOffer.useMutation({ onSuccess: () => { utils.ads.adminOffersList.invalidate(); utils.ads.offers.invalidate(); toast.success("Offer updated"); setEditing(null); setFormOpen(false); } });
+  const deleteOffer = trpc.ads.deleteOffer.useMutation({ onSuccess: () => { utils.ads.adminOffersList.invalidate(); utils.ads.offers.invalidate(); toast.success("Offer deleted"); } });
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<number | null>(null);

@@ -12,13 +12,13 @@ export default function GalleryManager() {
   const utils = trpc.useUtils();
   const { data: items, isLoading } = trpc.gallery.adminList.useQuery();
   const createItem = trpc.gallery.create.useMutation({
-    onSuccess: () => { utils.gallery.adminList.invalidate(); toast.success("Added to gallery"); setFormOpen(false); },
+    onSuccess: () => { utils.gallery.adminList.invalidate(); utils.gallery.list.invalidate(); toast.success("Added to gallery"); setFormOpen(false); },
   });
   const updateItem = trpc.gallery.update.useMutation({
-    onSuccess: () => { utils.gallery.adminList.invalidate(); toast.success("Updated"); setEditing(null); setFormOpen(false); },
+    onSuccess: () => { utils.gallery.adminList.invalidate(); utils.gallery.list.invalidate(); toast.success("Updated"); setEditing(null); setFormOpen(false); },
   });
   const deleteItem = trpc.gallery.delete.useMutation({
-    onSuccess: () => { utils.gallery.adminList.invalidate(); toast.success("Deleted"); },
+    onSuccess: () => { utils.gallery.adminList.invalidate(); utils.gallery.list.invalidate(); toast.success("Deleted"); },
   });
 
   const [formOpen, setFormOpen] = useState(false);

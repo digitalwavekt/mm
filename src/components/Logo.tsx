@@ -3,6 +3,8 @@ import { useId } from "react";
 interface LogoProps {
   size?: "sm" | "md" | "lg";
   className?: string;
+  /** Admin-uploaded logo (Settings → Logo URL). Falls back to the SVG mark when unset. */
+  imageUrl?: string;
 }
 
 const sizeMap: Record<NonNullable<LogoProps["size"]>, string> = {
@@ -17,8 +19,18 @@ const textSizeMap: Record<NonNullable<LogoProps["size"]>, string> = {
   lg: "text-2xl",
 };
 
-export default function Logo({ size = "md", className = "" }: LogoProps) {
+export default function Logo({ size = "md", className = "", imageUrl }: LogoProps) {
   const gradientId = `mmHeartGradient-${useId().replace(/:/g, "")}`;
+
+  if (imageUrl) {
+    return (
+      <img
+        src={imageUrl}
+        alt="Logo"
+        className={`shrink-0 object-contain ${sizeMap[size]} ${className}`}
+      />
+    );
+  }
 
   return (
     <div className={`relative shrink-0 ${sizeMap[size]} ${className}`}>

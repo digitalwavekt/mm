@@ -17,6 +17,7 @@ export default function Footer() {
   const [email, setEmail] = useState("");
 
   const siteName = getSetting("siteName", "Mamta Makeover");
+  const logoUrl = getSetting("logo", "");
   const tagline = getSetting("tagline", "Where Beauty Meets Artistry");
   const address = getSetting("address", "123 Luxury Lane, Beverly Hills, CA 90210");
   const phone = getSetting("phone", "+1 (555) 234-5678");
@@ -107,7 +108,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <Logo size="md" />
+              <Logo size="md" imageUrl={logoUrl} />
               <span className="text-lg font-semibold luxury-gradient-text">
                 {siteName}
               </span>

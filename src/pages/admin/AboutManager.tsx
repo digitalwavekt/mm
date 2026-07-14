@@ -10,16 +10,16 @@ export default function AboutManager() {
   const { data: owner } = trpc.about.adminOwner.useQuery();
   const { data: timeline } = trpc.about.adminTimeline.useQuery();
   const upsertOwner = trpc.about.upsertOwner.useMutation({
-    onSuccess: () => { utils.about.adminOwner.invalidate(); toast.success("Owner info saved"); },
+    onSuccess: () => { utils.about.adminOwner.invalidate(); utils.about.owner.invalidate(); toast.success("Owner info saved"); },
   });
   const createTimeline = trpc.about.createTimeline.useMutation({
-    onSuccess: () => { utils.about.adminTimeline.invalidate(); setShowTimelineForm(false); toast.success("Timeline entry added"); },
+    onSuccess: () => { utils.about.adminTimeline.invalidate(); utils.about.timeline.invalidate(); setShowTimelineForm(false); toast.success("Timeline entry added"); },
   });
   const updateTimeline = trpc.about.updateTimeline.useMutation({
-    onSuccess: () => { utils.about.adminTimeline.invalidate(); setEditingTimeline(null); toast.success("Timeline updated"); },
+    onSuccess: () => { utils.about.adminTimeline.invalidate(); utils.about.timeline.invalidate(); setEditingTimeline(null); toast.success("Timeline updated"); },
   });
   const deleteTimeline = trpc.about.deleteTimeline.useMutation({
-    onSuccess: () => { utils.about.adminTimeline.invalidate(); toast.success("Timeline deleted"); },
+    onSuccess: () => { utils.about.adminTimeline.invalidate(); utils.about.timeline.invalidate(); toast.success("Timeline deleted"); },
   });
 
   const [ownerForm, setOwnerForm] = useState({

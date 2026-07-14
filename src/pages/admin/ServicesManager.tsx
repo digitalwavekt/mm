@@ -15,13 +15,13 @@ export default function ServicesManager() {
   const utils = trpc.useUtils();
   const { data: services, isLoading } = trpc.services.adminList.useQuery();
   const createService = trpc.services.create.useMutation({
-    onSuccess: () => { utils.services.adminList.invalidate(); toast.success("Service created"); setFormOpen(false); },
+    onSuccess: () => { utils.services.adminList.invalidate(); utils.services.list.invalidate(); toast.success("Service created"); setFormOpen(false); },
   });
   const updateService = trpc.services.update.useMutation({
-    onSuccess: () => { utils.services.adminList.invalidate(); toast.success("Service updated"); setEditing(null); setFormOpen(false); },
+    onSuccess: () => { utils.services.adminList.invalidate(); utils.services.list.invalidate(); toast.success("Service updated"); setEditing(null); setFormOpen(false); },
   });
   const deleteService = trpc.services.delete.useMutation({
-    onSuccess: () => { utils.services.adminList.invalidate(); toast.success("Service deleted"); },
+    onSuccess: () => { utils.services.adminList.invalidate(); utils.services.list.invalidate(); toast.success("Service deleted"); },
   });
 
   const [formOpen, setFormOpen] = useState(false);

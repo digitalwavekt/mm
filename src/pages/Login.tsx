@@ -8,10 +8,13 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/providers/trpc";
 import Logo from "@/components/Logo";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 export default function Login() {
   const navigate = useNavigate();
   const utils = trpc.useUtils();
+  const { getSetting } = useSiteSettings();
+  const logoUrl = getSetting("logo", "");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -35,7 +38,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] px-4">
       <Card className="w-full max-w-sm border-white/10 bg-[#111]">
         <CardHeader className="text-center space-y-3">
-          <Logo size="lg" className="mx-auto" />
+          <Logo size="lg" className="mx-auto" imageUrl={logoUrl} />
           <CardTitle className="text-white">Admin Sign In</CardTitle>
         </CardHeader>
         <CardContent>
