@@ -19,6 +19,11 @@ const trpcClient = trpc.createClient({
       // setup).
       url: `${import.meta.env.VITE_API_URL ?? ""}/api/trpc`,
       transformer: superjson,
+      // Always POST, never GET. tRPC uses GET for queries by default, and
+      // GET responses are fair game for browsers/CDNs/proxies to cache —
+      // which was causing stale data on the live site until a hard
+      // refresh. POST responses are never cached by default anywhere.
+      methodOverride: "POST",
       fetch(input, init) {
         return globalThis.fetch(input, {
           ...(init ?? {}),

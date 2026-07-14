@@ -28,6 +28,13 @@ app.use(
   }),
 );
 
+// Belt-and-suspenders: every /api response is dynamic and must never be
+// cached by the browser, Render's edge, or any proxy in between.
+app.use("/api/*", async (c, next) => {
+  await next();
+  c.header("Cache-Control", "no-store, no-cache, must-revalidate");
+});
+
 app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
 app.use("/api/trpc/*", async (c) => {
   return fetchRequestHandler({
